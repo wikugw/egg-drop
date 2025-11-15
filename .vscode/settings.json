@@ -1,0 +1,22 @@
+{
+  // --- Format saat save ---
+  "editor.formatOnSave": true,
+
+  // --- Jalankan ESLint + autofix saat save ---
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "always",
+    "source.addMissingImports": "always"
+  },
+
+  // --- Aktifkan auto-import suggestion ---
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true,
+
+  // --- Gunakan Prettier (jika pakai prettier) ---
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // --- Agar Next.js ESLint otomatis bekerja ---
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
+}
