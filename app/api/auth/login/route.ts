@@ -41,10 +41,6 @@ export async function POST(req: Request) {
 
     const res = NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-      },
     });
 
     res.cookies.set("session", token, {
