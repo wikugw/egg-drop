@@ -39,7 +39,13 @@ export async function POST(req: Request) {
 
     const token = createJwt({ id: user.id, email: user.email });
 
-    const res = NextResponse.json({ success: true });
+    const res = NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    });
 
     res.cookies.set("session", token, {
       httpOnly: true,
