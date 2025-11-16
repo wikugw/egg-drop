@@ -8,6 +8,7 @@ export const seedUsers = async () => {
   await db
     .insert(users)
     .values({
+      id: 1,
       email: "admin@example.com",
       password,
     })
