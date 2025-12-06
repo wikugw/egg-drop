@@ -10,17 +10,22 @@ export default async function ProtectedLayout({
 }) {
   const session = await getSession();
 
-  if (!session) {
-    redirect("/login");
-  }
+  if (!session) redirect("/login");
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full">
+        {/* Sidebar fixed width */}
         <AppSidebar />
-        <main className="flex-1 p-6">
-          <SidebarTrigger />
-          {children}
+
+        {/* Main akan otomatis ambil sisa ruang */}
+        <main className="flex-1 p-6 overflow-auto">
+          <div className="flex flex-row items-center gap-3">
+            <SidebarTrigger />
+            {/* breadcrumb */}
+          </div>
+
+          <div className="mt-2">{children}</div>
         </main>
       </div>
     </SidebarProvider>
