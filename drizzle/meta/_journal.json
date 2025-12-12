@@ -29,6 +29,13 @@
       "when": 1763642214958,
       "tag": "0003_funny_luke_cage",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1764995278266,
+      "tag": "0004_fresh_eternals",
+      "breakpoints": true
     }
   ]
 }

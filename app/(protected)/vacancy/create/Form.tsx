@@ -1,6 +1,7 @@
 "use client";
 
 import { DepartmentDropdown } from "@/components/form/combo-box/Department";
+import { PositionDropdown } from "@/components/form/combo-box/Position";
 import { FormInputField } from "@/components/form/FormInputField";
 import { FormTextareaField } from "@/components/form/FormTextAreaField";
 import { Button } from "@/components/ui/button";
@@ -83,11 +84,11 @@ export default function VacancyForm({ vacancyId }: { vacancyId?: number }) {
                 placeholder="Department ID"
               />
 
-              <FormInputField
+              <PositionDropdown
+                departmentId={String(form.watch().departmentId)}
                 control={form.control}
                 name="positionId"
                 label="Position ID"
-                type="number"
                 placeholder="Position ID"
               />
 
