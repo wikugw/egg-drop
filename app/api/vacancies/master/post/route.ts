@@ -39,6 +39,8 @@ export async function POST(req: Request) {
         .update(vacancies)
         .set({
           ...data,
+          departmentId: Number(data.departmentId),
+          positionId: Number(data.positionId),
           updatedBy: Number(session.id),
           updatedAt: new Date(),
         })
@@ -55,6 +57,8 @@ export async function POST(req: Request) {
       .insert(vacancies)
       .values({
         ...data,
+        departmentId: Number(data.departmentId),
+        positionId: Number(data.positionId),
         vacancyCode: generateV4String(),
         createdBy: Number(session.id),
         updatedBy: Number(session.id),

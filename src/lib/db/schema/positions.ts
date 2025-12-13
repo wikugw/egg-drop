@@ -1,3 +1,4 @@
+import { InferSelectModel } from "drizzle-orm";
 import { integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
 import { departments } from "./departments";
 
@@ -8,3 +9,5 @@ export const positions = pgTable("positions", {
     .references(() => departments.id) // Links to the 'id' column in the 'departments' table
     .notNull(),
 });
+
+export type Position = InferSelectModel<typeof positions>;

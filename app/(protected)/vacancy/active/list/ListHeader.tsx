@@ -4,8 +4,10 @@ import Link from "next/link";
 
 export default function ListHeader() {
   return (
-    <Button>
-      <Link href="/vacancy/create">Create Vacancy</Link>
-    </Button>
+    <div className="flex flex-row">
+      <Button>
+        <Link href="/vacancy/master/list">Master Vacancy</Link>
+      </Button>
+    </div>
   );
 }

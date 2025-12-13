@@ -1,3 +1,4 @@
+import { InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   doublePrecision,
@@ -31,3 +32,5 @@ export const vacancies = pgTable("vacancies", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export type Vacancy = InferSelectModel<typeof vacancies>;

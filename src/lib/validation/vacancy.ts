@@ -11,8 +11,8 @@ export const vacancySchema = z.object({
   requirements: z.string().optional().nullable(),
   responsibilities: z.string().optional().nullable(),
 
-  departmentId: z.number().min(1, "Department is required"),
-  positionId: z.number().min(1, "Position is required"),
+  departmentId: z.string().min(1, "Department is required"),
+  positionId: z.string().min(1, "Position is required"),
   createdBy: z.number().min(1, "createdBy is required"),
   updatedBy: z.number().min(1, "updatedBy is required"),
 
