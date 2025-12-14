@@ -12,52 +12,32 @@ import { api } from "@/src/lib/fetch-json";
 import { VacancyFormType, vacancySchema } from "@/src/lib/validation/vacancy";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-export default function VacancyForm({ vacancyId }: { vacancyId?: number }) {
+export default function VacancyForm() {
   const router = useRouter();
 
   const form = useForm<VacancyFormType>({
     resolver: zodResolver(vacancySchema),
-    // defaultValues: {
-    //   title: "Front End Enginner",
-    //   description: "",
-    //   requirements: "",
-    //   responsibilities: "",
-    //   departmentId: 0,
-    //   positionId: 0,
-    //   salaryMin: 0,
-    //   salaryMax: 0,
-    //   createdBy: 0,
-    //   updatedBy: 0,
-    // },
     defaultValues: {
-      title: "Front End Engineer",
-      description:
-        "We are looking for a Front End Engineer to build scalable and user-friendly web applications.",
-      requirements: `
-- Bachelor's degree in Computer Science or related field
-- Minimum 2 years experience as Front End Developer
-- Strong knowledge of HTML, CSS, JavaScript
-- Experience with React or Vue
-- Familiar with REST API integration
-  `.trim(),
-      responsibilities: `
-- Develop and maintain front end features
-- Collaborate with UI/UX designers
-- Optimize applications for maximum performance
-- Write clean and maintainable code
-  `.trim(),
-      departmentId: "1",
-      positionId: "2",
-      salaryMin: 8000000,
-      salaryMax: 15000000,
-      createdBy: 1,
-      updatedBy: 1,
+      title: "",
+      description: "",
+      requirements: "",
+      responsibilities: "",
+      departmentId: "",
+      positionId: "",
+      salaryMin: 0,
+      salaryMax: 0,
+      createdBy: "",
+      updatedBy: "",
     },
   });
+
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id"); // string | null
+  const vacancyId = id ? id : undefined;
 
   const { data, isLoading } = useVacancyDetail(vacancyId);
 
@@ -65,6 +45,8 @@ export default function VacancyForm({ vacancyId }: { vacancyId?: number }) {
     if (data) {
       form.reset({
         ...data,
+        departmentId: String(data.departmentId),
+        positionId: String(data.positionId),
       });
     }
   }, [data, form]);
@@ -81,7 +63,8 @@ export default function VacancyForm({ vacancyId }: { vacancyId?: number }) {
     },
   });
 
-  const onSubmit = async (values: VacancyFormType) => {
+  const onSubmit = async () => {
+    const values = form.getValues();
     mutation.mutate(values);
   };
 
@@ -95,7 +78,7 @@ export default function VacancyForm({ vacancyId }: { vacancyId?: number }) {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-6">
             <div className="grid grid-cols-1 gap-6">
               <FormInputField
                 control={form.control}
@@ -161,10 +144,10 @@ export default function VacancyForm({ vacancyId }: { vacancyId?: number }) {
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" onClick={onSubmit}>
               {vacancyId ? "Update Vacancy" : "Create Vacancy"}
             </Button>
-          </form>
+          </div>
         </Form>
       </CardContent>
     </Card>

@@ -37,7 +37,12 @@ export const columns: ColumnDef<VacancyMasterResponse>[] = [
     id: "actions",
     header: "Action",
     cell: ({ row }) => (
-      <Link href={`/vacancy/master/${row.original.id}`}>
+      <Link
+        href={{
+          pathname: "/vacancy/master/form",
+          query: { id: row.original.id },
+        }}
+      >
         <Button variant="outline" size="sm">
           <Eye className="h-4 w-4 mr-1" />
           View

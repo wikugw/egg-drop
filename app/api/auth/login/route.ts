@@ -1,3 +1,4 @@
+import { badRequest, unauthorized } from "@/src/lib/api-response";
 import { db } from "@/src/lib/db";
 import { users } from "@/src/lib/db/schema/users";
 import { comparePassword } from "@/src/lib/hash";
@@ -10,10 +11,7 @@ export async function POST(req: Request) {
     const { email, password } = await req.json();
 
     if (!email || !password) {
-      return NextResponse.json(
-        { message: "Email/password required" },
-        { status: 400 }
-      );
+      return badRequest("Email/password required", null);
     }
 
     const rows = await db
@@ -31,10 +29,7 @@ export async function POST(req: Request) {
 
     const ok = await comparePassword(password, user.password);
     if (!ok) {
-      return NextResponse.json(
-        { message: "Password not match" },
-        { status: 401 }
-      );
+      return unauthorized("Password not match");
     }
 
     const token = createJwt({ id: user.id, email: user.email });

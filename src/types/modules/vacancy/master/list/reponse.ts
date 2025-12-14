@@ -16,3 +16,9 @@ export type VacancyMasterListResponse = {
   pageLength: number;
   total: number;
 };
+
+export type VacancyMasterDetailResponse = VacancyMasterResponse & {
+  description: string;
+  requirements: string;
+  responsibilities: string;
+};

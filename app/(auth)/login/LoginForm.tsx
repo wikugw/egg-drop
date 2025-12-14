@@ -14,6 +14,7 @@ import { Form } from "@/components/ui/form";
 import { TypographyP } from "@/components/ui/typography";
 import { api } from "@/src/lib/fetch-json";
 import { LoginResponse } from "@/src/types/responses/login";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   email: z.email("Email tidak valid"),
@@ -23,6 +24,8 @@ const schema = z.object({
 type LoginValues = z.infer<typeof schema>;
 
 export default function LoginForm() {
+  const router = useRouter();
+
   const form = useForm<LoginValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -36,7 +39,7 @@ export default function LoginForm() {
       return api.post<LoginResponse, LoginValues>("/api/auth/login", values);
     },
     onSuccess: () => {
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     },
   });
 

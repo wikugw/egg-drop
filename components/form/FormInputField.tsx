@@ -1,13 +1,13 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Control, FieldValues, Path } from "react-hook-form";
 
 interface Props<T extends FieldValues> {
@@ -33,7 +33,21 @@ export function FormInputField<T extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input type={type} placeholder={placeholder} {...field} />
+            <Input
+              type={type}
+              placeholder={placeholder}
+              {...field}
+              onChange={(e) => {
+                const value =
+                  type === "number"
+                    ? e.target.value === ""
+                      ? undefined
+                      : Number(e.target.value)
+                    : e.target.value;
+
+                field.onChange(value);
+              }}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
