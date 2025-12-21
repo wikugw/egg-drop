@@ -1,4 +1,4 @@
-import ListHeader from "./list/ListHeader";
+import ListHeader from "./list/components/ListHeader";
 
 export default function VacancyActiveListPage() {
   return <ListHeader />;
