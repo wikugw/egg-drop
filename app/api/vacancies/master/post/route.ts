@@ -41,7 +41,6 @@ export async function POST(req: Request) {
           ...data,
           departmentId: Number(data.departmentId),
           positionId: Number(data.positionId),
-          updatedBy: Number(session.id),
           updatedAt: new Date(),
         })
         .where(eq(vacancies.id, id))
@@ -60,8 +59,6 @@ export async function POST(req: Request) {
         departmentId: Number(data.departmentId),
         positionId: Number(data.positionId),
         vacancyCode: generateV4String(),
-        createdBy: Number(session.id),
-        updatedBy: Number(session.id),
       })
       .returning();
 

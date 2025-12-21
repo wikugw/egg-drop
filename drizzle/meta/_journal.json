@@ -36,6 +36,13 @@
       "when": 1764995278266,
       "tag": "0004_fresh_eternals",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1766281099941,
+      "tag": "0005_tired_moira_mactaggert",
+      "breakpoints": true
     }
   ]
 }

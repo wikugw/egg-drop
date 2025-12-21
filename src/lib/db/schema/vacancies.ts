@@ -21,8 +21,8 @@ export const vacancies = pgTable("vacancies", {
   departmentId: integer("department_id").notNull(),
   positionId: integer("position_id").notNull(),
 
-  createdBy: integer("created_by").notNull(),
-  updatedBy: integer("updated_by").notNull(),
+  createdBy: text("created_by").notNull(),
+  updatedBy: text("updated_by").notNull(),
 
   salaryMin: doublePrecision("salary_min").notNull(),
   salaryMax: doublePrecision("salary_max").notNull(),

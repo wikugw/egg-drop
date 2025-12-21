@@ -2,7 +2,7 @@ import { ok, serverError } from "@/src/lib/api-response";
 import { db } from "@/src/lib/db";
 import { departments, positions } from "@/src/lib/db/schema";
 import { vacancies } from "@/src/lib/db/schema/vacancies";
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 export async function GET(request: Request) {
   try {
@@ -33,6 +33,7 @@ export async function GET(request: Request) {
       .leftJoin(departments, eq(departments.id, vacancies.departmentId))
       .leftJoin(positions, eq(positions.id, vacancies.positionId))
       .where(eq(vacancies.isActive, true))
+      .orderBy(desc(vacancies.updatedAt))
       .limit(limit)
       .offset(offset);
 

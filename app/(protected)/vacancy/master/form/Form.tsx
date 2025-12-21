@@ -7,17 +7,20 @@ import { FormTextareaField } from "@/components/form/FormTextAreaField";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { useVacancyDetail } from "@/hooks/modules/vacancy/use-vacancy-detail";
+import { useVacancyDetail } from "@/hooks/modules/vacancy/master/use-vacancy-detail";
 import { api } from "@/src/lib/fetch-json";
 import { VacancyFormType, vacancySchema } from "@/src/lib/validation/vacancy";
+import { RootState } from "@/src/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 export default function VacancyForm() {
   const router = useRouter();
+  const employee = useSelector((state: RootState) => state.employee.data);
 
   const form = useForm<VacancyFormType>({
     resolver: zodResolver(vacancySchema),
@@ -59,12 +62,16 @@ export default function VacancyForm() {
       );
     },
     onSuccess: () => {
-      router.push("/vacancy/active-list");
+      router.push("/vacancy/master/list");
     },
   });
 
   const onSubmit = async () => {
     const values = form.getValues();
+    values.createdBy = employee.email;
+    values.updatedBy = employee.email;
+    console.log(employee);
+    console.log(values);
     mutation.mutate(values);
   };
 

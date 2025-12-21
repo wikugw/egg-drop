@@ -12,6 +12,8 @@ import { FormPasswordInputField } from "@/components/form/FormPasswordInputField
 import { ThemeToggler } from "@/components/theme/theme-toggler";
 import { Form } from "@/components/ui/form";
 import { TypographyP } from "@/components/ui/typography";
+import { USER_EMAIL } from "@/src/constant/local-storage";
+import { saveToLocalStorage } from "@/src/helper/local-storage";
 import { api } from "@/src/lib/fetch-json";
 import { LoginResponse } from "@/src/types/responses/login";
 import { useRouter } from "next/navigation";
@@ -39,6 +41,7 @@ export default function LoginForm() {
       return api.post<LoginResponse, LoginValues>("/api/auth/login", values);
     },
     onSuccess: () => {
+      saveToLocalStorage(USER_EMAIL, form.getValues().email);
       router.push("/dashboard");
     },
   });

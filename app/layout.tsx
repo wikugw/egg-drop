@@ -1,7 +1,8 @@
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { ReduxProvider } from "@/src/store/provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme/theme-provider";
 import Providers from "./providers";
 
 const geistSans = Geist({
@@ -36,7 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            {children}
+            <ReduxProvider>{children}</ReduxProvider>
           </Providers>
         </ThemeProvider>
       </body>

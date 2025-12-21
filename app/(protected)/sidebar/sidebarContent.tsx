@@ -1,3 +1,5 @@
+"use client";
+
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
 import {
@@ -10,6 +12,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useEmployeeDetail } from "@/hooks/modules/employee/use-employee-detail";
+import { USER_EMAIL } from "@/src/constant/local-storage";
+import { getFromLocalStorage } from "@/src/helper/local-storage";
+import { RootState } from "@/src/store";
+import { setEmployee } from "@/src/store/slices/employee-slice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { AppSidebarFooter } from "./sidebarFooter";
 
 // Menu items.
@@ -42,6 +51,17 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const employee = useSelector((state: RootState) => state.employee.data);
+  const dispatch = useDispatch();
+
+  const { data } = useEmployeeDetail(getFromLocalStorage(USER_EMAIL) ?? "");
+
+  useEffect(() => {
+    if (!employee.email && data) {
+      dispatch(setEmployee(data));
+    }
+  }, [employee, data, dispatch]);
+
   return (
     <Sidebar>
       <SidebarContent>

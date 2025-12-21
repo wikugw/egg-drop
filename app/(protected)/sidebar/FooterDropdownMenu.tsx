@@ -1,3 +1,5 @@
+"use client";
+
 import { ThemeToggler } from "@/components/theme/theme-toggler";
 import {
   DropdownMenu,
@@ -6,18 +8,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 
-import { getSession } from "@/src/lib/auth";
+import { RootState } from "@/src/store";
 import { ChevronUp, User2 } from "lucide-react";
+import { useSelector } from "react-redux";
 import { LogoutButton } from "./LogoutButton";
 
-export async function FooterDropdownMenu() {
-  const session = await getSession();
+export function FooterDropdownMenu() {
+  const employee = useSelector((state: RootState) => state.employee.data);
+
   return (
     <DropdownMenu>
       <div className="flex flex-row gap-x-1 items-center">
         <DropdownMenuTrigger asChild>
           <SidebarMenuButton>
-            <User2 /> {session?.email}
+            <User2 /> {employee.email}
             <ChevronUp className="ml-auto" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
