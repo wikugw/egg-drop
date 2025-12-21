@@ -14,6 +14,7 @@ import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { sidebarItems } from "./sidebar-config";
+import { AppSidebarFooter } from "./sidebarFooter";
 
 const isActiveRoute = (pathname: string, url?: string) =>
   !!url && (pathname === url || pathname.startsWith(`${url}/`));
@@ -108,6 +109,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <AppSidebarFooter />
     </Sidebar>
   );
 }
