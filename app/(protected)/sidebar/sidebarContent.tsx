@@ -1,7 +1,5 @@
 "use client";
 
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -12,55 +10,30 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useEmployeeDetail } from "@/hooks/modules/employee/use-employee-detail";
-import { USER_EMAIL } from "@/src/constant/local-storage";
-import { getFromLocalStorage } from "@/src/helper/local-storage";
-import { RootState } from "@/src/store";
-import { setEmployee } from "@/src/store/slices/employee-slice";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppSidebarFooter } from "./sidebarFooter";
+import { ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { sidebarItems } from "./sidebar-config";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Vacancy",
-    url: "/vacancy/active/list",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
+const isActiveRoute = (pathname: string, url?: string) =>
+  !!url && (pathname === url || pathname.startsWith(`${url}/`));
+
+const getActiveParent = (pathname: string) =>
+  sidebarItems.find((item) =>
+    item.children?.some((child) => isActiveRoute(pathname, child.url))
+  )?.title ?? null;
 
 export function AppSidebar() {
-  const employee = useSelector((state: RootState) => state.employee.data);
-  const dispatch = useDispatch();
+  const pathname = usePathname();
 
-  const { data } = useEmployeeDetail(getFromLocalStorage(USER_EMAIL) ?? "");
+  // hanya untuk manual toggle
+  const [manualOpen, setManualOpen] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!employee.email && data) {
-      dispatch(setEmployee(data));
-    }
-  }, [employee, data, dispatch]);
+  // 🔥 derived value (NO state, NO effect)
+  const autoOpen = getActiveParent(pathname);
+
+  // prioritas: manual > auto
+  const openMenu = manualOpen ?? autoOpen;
 
   return (
     <Sidebar>
@@ -69,21 +42,72 @@ export function AppSidebar() {
           <SidebarGroupLabel>Egg Drop</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                const isParentActive = item.children?.some((child) =>
+                  isActiveRoute(pathname, child.url)
+                );
+
+                const isOpen = openMenu === item.title;
+
+                // ===== PARENT =====
+                if (item.children) {
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        isActive={isParentActive}
+                        onClick={() =>
+                          setManualOpen(isOpen ? null : item.title)
+                        }
+                      >
+                        {Icon && <Icon />}
+                        <span>{item.title}</span>
+                        <ChevronDown
+                          className={`ml-auto transition-transform ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </SidebarMenuButton>
+
+                      {isOpen && (
+                        <div className="ml-6 mt-1 flex flex-col gap-1">
+                          {item.children.map((child) => (
+                            <SidebarMenuButton
+                              key={child.title}
+                              asChild
+                              size="sm"
+                              isActive={isActiveRoute(pathname, child.url)}
+                            >
+                              <a href={child.url}>
+                                <span>{child.title}</span>
+                              </a>
+                            </SidebarMenuButton>
+                          ))}
+                        </div>
+                      )}
+                    </SidebarMenuItem>
+                  );
+                }
+
+                // ===== SINGLE =====
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActiveRoute(pathname, item.url)}
+                    >
+                      <a href={item.url}>
+                        {Icon && <Icon />}
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <AppSidebarFooter />
     </Sidebar>
   );
 }
