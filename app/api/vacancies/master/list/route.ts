@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const page = Number(searchParams.get("id") ?? 1);
+    const page = Number(searchParams.get("page") ?? 1);
     const pageLength = Number(searchParams.get("pageLength") ?? 10);
 
     const limit = pageLength;

@@ -4,7 +4,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -28,22 +27,34 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  page: number;
+  pageLength: number;
+  total: number;
+  onPageChange: (page: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  page,
+  pageLength,
+  total,
+  onPageChange,
 }: DataTableProps<TData, TValue>) {
+  const pageCount = Math.ceil(total / pageLength);
+
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: {
+    pageCount,
+    manualPagination: true,
+    state: {
       pagination: {
-        pageSize: 10, // 👈 default page size
+        pageIndex: page - 1,
+        pageSize: pageLength,
       },
     },
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (
@@ -98,31 +109,24 @@ export function DataTable<TData, TValue>({
 
       {/* PAGINATION */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground flex-1">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+        <p className="text-sm text-muted-foreground">
+          Page {page} of {pageCount}
         </p>
 
         <Pagination className="flex justify-end flex-1">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                onClick={() => table.previousPage()}
-                className={
-                  !table.getCanPreviousPage()
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
+                onClick={() => onPageChange(page - 1)}
+                className={page <= 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
 
             <PaginationItem>
               <PaginationNext
-                onClick={() => table.nextPage()}
+                onClick={() => onPageChange(page + 1)}
                 className={
-                  !table.getCanNextPage()
-                    ? "pointer-events-none opacity-50"
-                    : ""
+                  page >= pageCount ? "pointer-events-none opacity-50" : ""
                 }
               />
             </PaginationItem>
