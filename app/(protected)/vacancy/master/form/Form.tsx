@@ -9,8 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { useVacancyDetail } from "@/hooks/modules/vacancy/master/use-vacancy-detail";
 import { api } from "@/src/lib/fetch-json";
+import { errorAlert, successAlert } from "@/src/lib/swal/swal";
 import { VacancyFormType, vacancySchema } from "@/src/lib/validation/vacancy";
 import { RootState } from "@/src/store";
+import { ApiError } from "@/src/types/responses/generic-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -62,16 +64,31 @@ export default function VacancyForm() {
       );
     },
     onSuccess: () => {
-      router.push("/vacancy/master/list");
+      successAlert("Vacancy Submitted!").then(() =>
+        router.push("/vacancy/master/list")
+      );
+    },
+    onError: (e: ApiError) => {
+      errorAlert(e.message);
     },
   });
 
   const onSubmit = async () => {
+    form.reset({
+      ...form.getValues(),
+      createdBy: employee.email,
+      updatedBy: employee.email,
+    });
     const values = form.getValues();
-    values.createdBy = employee.email;
-    values.updatedBy = employee.email;
-    console.log(employee);
-    console.log(values);
+
+    const isValid = await form.trigger();
+
+    if (!isValid) {
+      console.log("Form tidak valid");
+      console.log(form.formState.errors.root);
+      return;
+    }
+
     mutation.mutate(values);
   };
 
