@@ -3,19 +3,25 @@ import { VacancyMasterListResponse } from "@/src/types/modules/vacancy/master/li
 import { ApiSuccess } from "@/src/types/responses/generic-response";
 import { useQuery } from "@tanstack/react-query";
 
-export function useVacancyMasterList(page: number, pageLength: number) {
+export function useVacancyActiveList(
+  page: number,
+  pageLength: number,
+  selectedDate: Date
+) {
   return useQuery({
-    queryKey: ["vacancy-master-list", page, pageLength],
+    queryKey: ["vacancy-active-list", page, pageLength],
     queryFn: async () => {
       const params = new URLSearchParams();
 
       params.append("page", String(page));
       params.append("pageLength", String(pageLength));
+      params.append("selectedDate", String(selectedDate.toISOString()));
 
       const res: ApiSuccess<VacancyMasterListResponse> = await api.get(
-        `/api/vacancies/master/list?${params.toString()}`
+        `/api/vacancies/active/list?${params.toString()}`
       );
 
+      console.log(res);
       return res.data;
     },
   });
