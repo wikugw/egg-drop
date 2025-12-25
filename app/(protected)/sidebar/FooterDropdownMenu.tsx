@@ -13,7 +13,7 @@ import { ChevronUp, User2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { LogoutButton } from "./LogoutButton";
 
-export function FooterDropdownMenu() {
+export default function FooterDropdownMenu() {
   const employee = useSelector((state: RootState) => state.employee.data);
 
   return (
