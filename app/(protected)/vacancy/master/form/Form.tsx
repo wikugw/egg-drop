@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 export default function VacancyForm() {
@@ -75,6 +75,11 @@ export default function VacancyForm() {
     mutation.mutate(values);
   };
 
+  const departmentId = useWatch({
+    control: form.control,
+    name: "departmentId",
+  });
+
   if (isLoading) return <div className="p-6">Loading...</div>;
 
   return (
@@ -103,7 +108,7 @@ export default function VacancyForm() {
               />
 
               <PositionDropdown
-                departmentId={String(form.watch().departmentId)}
+                departmentId={String(departmentId)}
                 control={form.control}
                 name="positionId"
                 label="Position ID"
