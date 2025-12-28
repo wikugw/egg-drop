@@ -1,6 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/table/data-table";
+import { Loading } from "@/components/ui/loading";
 import { useVacancyActiveList } from "@/hooks/modules/vacancy/active/use-vacancy-active-list";
 import { useState } from "react";
 import { columns } from "./Column";
@@ -13,7 +14,7 @@ export default function Table() {
 
   const { data, isLoading } = useVacancyActiveList(page, pageLength, today);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="py-2">

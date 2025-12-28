@@ -21,7 +21,6 @@ export function useVacancyActiveList(
         `/api/vacancies/active/list?${params.toString()}`
       );
 
-      console.log(res);
       return res.data;
     },
   });

@@ -7,6 +7,7 @@ import { FormTextareaField } from "@/components/form/FormTextAreaField";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { Loading } from "@/components/ui/loading";
 import { useVacancyDetail } from "@/hooks/modules/vacancy/master/use-vacancy-detail";
 import { api } from "@/src/lib/fetch-json";
 import { errorAlert, successAlert } from "@/src/lib/swal/swal";
@@ -85,7 +86,6 @@ export default function VacancyForm() {
 
     if (!isValid) {
       console.log("Form tidak valid");
-      console.log(form.formState.errors.root);
       return;
     }
 
@@ -97,7 +97,7 @@ export default function VacancyForm() {
     name: "departmentId",
   });
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <Card className="shadow-md">

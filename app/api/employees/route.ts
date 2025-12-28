@@ -5,15 +5,12 @@ import { and, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   try {
-    console.log("start");
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
 
     if (!email) {
       return badRequest("Email is required", null);
     }
-
-    console.log(email);
 
     const result = await db
       .select({
@@ -29,8 +26,6 @@ export async function GET(request: Request) {
       .where(and(eq(users.email, email)));
 
     if (result.length == 0) return notFound();
-
-    console.log(result);
 
     return ok(result[0], "Vacancy detail retrieved");
   } catch (error) {

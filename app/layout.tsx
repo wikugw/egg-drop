@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ReduxProvider } from "@/src/store/provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "react-day-picker/dist/style.css";
 import "./globals.css";
 import Providers from "./providers";
 

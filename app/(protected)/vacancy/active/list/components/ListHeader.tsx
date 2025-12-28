@@ -6,7 +6,7 @@ export default function ListHeader() {
   return (
     <div className="flex flex-row">
       <Button>
-        <Link href="/vacancy/master/form">Create Vacancy</Link>
+        <Link href="/vacancy/active/form">Create Vacancy</Link>
       </Button>
     </div>
   );
