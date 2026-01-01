@@ -43,6 +43,13 @@
       "when": 1766281099941,
       "tag": "0005_tired_moira_mactaggert",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1767234389648,
+      "tag": "0006_big_loki",
+      "breakpoints": true
     }
   ]
 }

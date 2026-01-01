@@ -3,6 +3,7 @@ import {
   integer,
   pgTable,
   serial,
+  text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { vacancies } from "./vacancies";
@@ -20,4 +21,8 @@ export const vacancyPeriods = pgTable("vacancy_periods", {
   isActive: boolean("is_active").notNull().default(true),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+
+  createdBy: text("created_by").notNull(),
+  updatedBy: text("updated_by").notNull(),
 });

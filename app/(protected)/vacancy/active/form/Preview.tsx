@@ -1,6 +1,7 @@
 import { Loading } from "@/components/ui/loading";
 import { NotFound } from "@/components/ui/not-found";
 import { useVacancyDetail } from "@/hooks/modules/vacancy/master/use-vacancy-detail";
+import { toIdr } from "@/src/helper/currency";
 
 type Props = {
   id?: string;
@@ -41,8 +42,7 @@ export default function VacancyPreview({ id }: Props) {
       <div className="flex gap-2 text-sm">
         <span className="text-muted-foreground">Salary Range:</span>
         <span className="font-medium">
-          Rp {data.salaryMin.toLocaleString("id-ID")} – Rp{" "}
-          {data.salaryMax.toLocaleString("id-ID")}
+          {toIdr(data.salaryMin)} – {toIdr(data.salaryMax)}
         </span>
       </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { checkVacancyActive, postVacancy } from "@/clients/modules/active-form";
 import { DepartmentDropdown } from "@/components/form/combo-box/Department";
 import { PositionDropdown } from "@/components/form/combo-box/Position";
 import { VacancyDropdown } from "@/components/form/combo-box/Vacancy";
@@ -8,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { useVacancyDetail } from "@/hooks/modules/vacancy/master/use-vacancy-detail";
-import { api } from "@/src/lib/fetch-json";
+import { today } from "@/src/helper/date";
 import { errorAlert, successAlert } from "@/src/lib/swal/swal";
 import {
+  clientVacancyActiveSchema,
   VacancyActiveFormType,
-  vacancyActiveSchema,
 } from "@/src/lib/validation/vacancy-active";
 import { RootState } from "@/src/store";
 import { ApiError } from "@/src/types/responses/generic-response";
@@ -28,7 +29,7 @@ export default function VacancyForm() {
   const employee = useSelector((state: RootState) => state.employee.data);
 
   const form = useForm<VacancyActiveFormType>({
-    resolver: zodResolver(vacancyActiveSchema),
+    resolver: zodResolver(clientVacancyActiveSchema),
     defaultValues: {
       departmentId: "",
       positionId: "",
@@ -43,19 +44,22 @@ export default function VacancyForm() {
   const id = searchParams.get("id"); // string | null
   const vacancyActiveId = id ? id : undefined;
 
-  const mutation = useMutation({
+  const submitMutation = useMutation({
     mutationFn: async (values: VacancyActiveFormType) => {
-      return api.post<unknown, VacancyActiveFormType>(
-        "/api/vacancies/master/post",
-        values
-      );
+      const check = await checkVacancyActive(values.vacancyId, today());
+
+      if (check?.id) {
+        throw new Error("Active vacancy already exists");
+      }
+
+      return postVacancy(values);
     },
     onSuccess: () => {
       successAlert("Vacancy Submitted!").then(() =>
         router.push("/vacancy/master/list")
       );
     },
-    onError: (e: ApiError) => {
+    onError: (e: ApiError | Error) => {
       errorAlert(e.message);
     },
   });
@@ -75,7 +79,7 @@ export default function VacancyForm() {
       return;
     }
 
-    mutation.mutate(values);
+    submitMutation.mutate(values);
   };
 
   const departmentId = useWatch({

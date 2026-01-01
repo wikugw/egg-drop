@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { toIdr } from "@/src/helper/currency";
 import { VacancyMasterResponse } from "@/src/types/modules/vacancy/master/list/reponse";
 import { ColumnDef } from "@tanstack/react-table";
 import { Eye } from "lucide-react";
@@ -25,7 +26,7 @@ export const columns: ColumnDef<VacancyMasterResponse>[] = [
     header: "Salary",
     cell: ({ row }) => {
       const { salaryMin, salaryMax } = row.original;
-      return `Rp ${salaryMin.toLocaleString()} - ${salaryMax.toLocaleString()}`;
+      return `${toIdr(salaryMin)} - ${toIdr(salaryMax)}`;
     },
   },
   {

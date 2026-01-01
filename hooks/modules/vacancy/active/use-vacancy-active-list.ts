@@ -1,5 +1,5 @@
 import { api } from "@/src/lib/fetch-json";
-import { VacancyMasterListResponse } from "@/src/types/modules/vacancy/master/list/reponse";
+import { VacancyActiveListResponse } from "@/src/types/modules/vacancy/active/list/reponse";
 import { ApiSuccess } from "@/src/types/responses/generic-response";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,7 +17,7 @@ export function useVacancyActiveList(
       params.append("pageLength", String(pageLength));
       params.append("selectedDate", String(selectedDate.toISOString()));
 
-      const res: ApiSuccess<VacancyMasterListResponse> = await api.get(
+      const res: ApiSuccess<VacancyActiveListResponse> = await api.get(
         `/api/vacancies/active/list?${params.toString()}`
       );
 
