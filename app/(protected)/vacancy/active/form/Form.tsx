@@ -8,7 +8,8 @@ import { FormDateRangeField } from "@/components/form/FormDateRange";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { useVacancyDetail } from "@/hooks/modules/vacancy/master/use-vacancy-detail";
+import { Loading } from "@/components/ui/loading";
+import { useVacancyActiveDetail } from "@/hooks/modules/vacancy/active/use-vacancy-active-detail";
 import { today } from "@/src/helper/date";
 import { errorAlert, successAlert } from "@/src/lib/swal/swal";
 import {
@@ -20,6 +21,7 @@ import { ApiError } from "@/src/types/responses/generic-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useSelector } from "react-redux";
 import VacancyPreview from "./Preview";
@@ -76,6 +78,7 @@ export default function VacancyForm() {
 
     if (!isValid) {
       console.log("Form tidak valid");
+      console.log(form.formState.errors.period);
       return;
     }
 
@@ -97,7 +100,24 @@ export default function VacancyForm() {
     name: "vacancyId",
   });
 
-  const { data, isLoading } = useVacancyDetail(vacancyId);
+  const { data, isLoading } = useVacancyActiveDetail(vacancyActiveId);
+
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        ...data,
+        departmentId: String(data.departmentId),
+        positionId: String(data.positionId),
+        vacancyId: String(data.vacancyId),
+        period: {
+          from: new Date(data.startDate),
+          to: new Date(data.endDate),
+        },
+      });
+    }
+  }, [data, form]);
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="flex justify-between gap-2">

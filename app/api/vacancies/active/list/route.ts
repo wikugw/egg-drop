@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     // =====================
     const data = await db
       .select({
-        id: vacancies.id,
+        id: vacancyPeriods.id,
         title: vacancies.title,
         departmentName: departments.name,
         positionName: positions.name,
