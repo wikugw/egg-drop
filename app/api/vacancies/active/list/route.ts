@@ -10,10 +10,33 @@ export async function GET(request: Request) {
 
     const page = Number(searchParams.get("page") ?? 1);
     const pageLength = Number(searchParams.get("pageLength") ?? 10);
-    const selectedDate = new Date(String(searchParams.get("selectedDate")));
+    const selectedDateParam = searchParams.get("selectedDate");
+    const positionIdParam = searchParams.get("positionId");
+
+    const selectedDate = selectedDateParam
+      ? new Date(selectedDateParam)
+      : undefined;
+
+    const positionId = positionIdParam ? Number(positionIdParam) : undefined;
 
     const limit = pageLength;
     const offset = (page - 1) * pageLength;
+
+    // =====================
+    // Shared WHERE clause
+    // =====================
+    const whereClause = and(
+      eq(vacancyPeriods.isActive, true),
+
+      selectedDate
+        ? and(
+            lte(vacancyPeriods.startDate, selectedDate),
+            gte(vacancyPeriods.endDate, selectedDate)
+          )
+        : undefined,
+
+      positionId ? eq(vacancies.positionId, positionId) : undefined
+    );
 
     // =====================
     // Query data (paginated)
@@ -35,17 +58,7 @@ export async function GET(request: Request) {
       .leftJoin(vacancies, eq(vacancyPeriods.vacancyId, vacancies.id))
       .leftJoin(departments, eq(departments.id, vacancies.departmentId))
       .leftJoin(positions, eq(positions.id, vacancies.positionId))
-      .where(
-        and(
-          eq(vacancyPeriods.isActive, true),
-          selectedDate
-            ? and(
-                lte(vacancyPeriods.startDate, new Date(selectedDate)),
-                gte(vacancyPeriods.endDate, new Date(selectedDate))
-              )
-            : undefined
-        )
-      )
+      .where(whereClause)
       .orderBy(desc(vacancies.updatedAt))
       .limit(limit)
       .offset(offset);
@@ -57,17 +70,7 @@ export async function GET(request: Request) {
       .select({ count: sql<number>`count(*)` })
       .from(vacancyPeriods)
       .leftJoin(vacancies, eq(vacancyPeriods.vacancyId, vacancies.id))
-      .where(
-        and(
-          eq(vacancyPeriods.isActive, true),
-          selectedDate
-            ? and(
-                lte(vacancyPeriods.startDate, new Date(selectedDate)),
-                gte(vacancyPeriods.endDate, new Date(selectedDate))
-              )
-            : undefined
-        )
-      );
+      .where(whereClause);
 
     return ok(
       {

@@ -18,6 +18,5 @@ export function usePositionList(departmentId?: string) {
       );
       return res.data ?? [];
     },
-    enabled: !!departmentId,
   });
 }
