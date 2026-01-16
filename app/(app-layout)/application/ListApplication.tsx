@@ -9,7 +9,7 @@ import { today } from "@/src/helper/date";
 import {
   ApplicationListFilterSchema,
   applicationListFilterSchema,
-} from "@/src/lib/validation/application";
+} from "@/src/lib/validation/application/application";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";

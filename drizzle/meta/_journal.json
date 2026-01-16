@@ -50,6 +50,41 @@
       "when": 1767234389648,
       "tag": "0006_big_loki",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1767512742495,
+      "tag": "0007_calm_vargas",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1767512800881,
+      "tag": "0008_concerned_adam_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1767512867418,
+      "tag": "0009_stormy_amazoness",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1767514121507,
+      "tag": "0010_wet_harpoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1768556384716,
+      "tag": "0011_cute_shooting_star",
+      "breakpoints": true
     }
   ]
 }

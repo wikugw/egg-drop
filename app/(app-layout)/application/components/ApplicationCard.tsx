@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toIdr } from "@/src/helper/currency";
 import { VacancyActiveResponse } from "@/src/types/modules/vacancy/active/list/reponse";
 import { format } from "date-fns";
+import Link from "next/link";
 
 type ApplicationCardProps = {
   item: VacancyActiveResponse;
@@ -34,9 +35,16 @@ export default function ApplicationCard({ item }: ApplicationCardProps) {
           {format(new Date(item.endDate), "dd MMM yyyy")}
         </div>
 
-        <Button variant="outline" className="w-full mt-4">
-          View Detail
-        </Button>
+        <Link
+          href={{
+            pathname: "/application/form",
+            query: { id: item.id },
+          }}
+        >
+          <Button variant="outline" className="w-full mt-4">
+            View Detail
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );
