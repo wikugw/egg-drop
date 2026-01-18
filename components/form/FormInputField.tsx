@@ -16,6 +16,7 @@ interface Props<T extends FieldValues> {
   label: string;
   type?: string;
   placeholder?: string;
+  onValueChange?: (value: string | number) => void;
 }
 
 export function FormInputField<T extends FieldValues>({
@@ -24,6 +25,7 @@ export function FormInputField<T extends FieldValues>({
   label,
   type = "text",
   placeholder,
+  onValueChange,
 }: Props<T>) {
   return (
     <FormField
@@ -46,6 +48,9 @@ export function FormInputField<T extends FieldValues>({
                     : e.target.value;
 
                 field.onChange(value);
+                if (onValueChange) {
+                  onValueChange(value ?? "");
+                }
               }}
             />
           </FormControl>

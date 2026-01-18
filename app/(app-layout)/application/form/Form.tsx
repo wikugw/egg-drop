@@ -1,5 +1,6 @@
 "use client";
 
+import { checkApplicant } from "@/clients/modules/application";
 import { FormInputField } from "@/components/form/FormInputField";
 import { FormTextareaField } from "@/components/form/FormTextAreaField";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,11 @@ import { Form } from "@/components/ui/form";
 import { Loading } from "@/components/ui/loading";
 
 import { api } from "@/src/lib/fetch-json";
-import { errorAlert, successAlert } from "@/src/lib/swal/swal";
+import {
+  confirmationModal,
+  errorAlert,
+  successAlert,
+} from "@/src/lib/swal/swal";
 import {
   applicationFormSchema,
   ApplicationFormType,
@@ -23,6 +28,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { useDebouncedCallback } from "use-debounce";
 
 /* =======================
    PROPS
@@ -49,12 +55,10 @@ export default function ApplicationFormInner({
   const form = useForm<ApplicationFormType>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
-      id: undefined,
-      name: "Wiku Galindra Wardhana",
-      email: "wikugalindrawardhana15@gmail.com",
-      experience: "software engineer",
-      skill: "html css",
-      vacancyPeriodId,
+      name: "",
+      email: "",
+      experience: "",
+      skill: "",
       createdBy: "",
       updatedBy: "",
       isActive: true,
@@ -102,6 +106,42 @@ export default function ApplicationFormInner({
     },
   });
 
+  const { mutate: checkEmailMutate, isPending } = useMutation({
+    mutationFn: (email: string) => checkApplicant(email),
+    onSuccess: (res, email) => {
+      // Jalankan logic modal hanya jika data ditemukan
+      if (res?.data?.id) {
+        confirmationModal({
+          title: "Data Ditemukan",
+          text: "Email ini pernah melamar sebelumnya. Gunakan data lama?",
+          confirmText: "Ya, Pakai Data Lama",
+          cancelText: "Input Baru",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.reset({
+              ...form.getValues(),
+              email: email, // Pastikan email tetap ada
+              name: res.data.fullName,
+              experience: res.data.experience ?? "",
+              skill: res.data.skill ?? "",
+            });
+          }
+        });
+      }
+    },
+    onError: (error) => {
+      console.error("Gagal mengecek email:", error);
+    },
+  });
+
+  // Di dalam komponen form kamu
+  const debouncedCheckEmail = useDebouncedCallback(async (email: string) => {
+    // Validasi format email sebelum tembak API
+    if (email.includes("@") && email.includes(".")) {
+      checkEmailMutate(email);
+    }
+  }, 700); // Tunggu 700ms setelah user berhenti mengetik
+
   /* =======================
      SUBMIT
   ======================= */
@@ -132,20 +172,26 @@ export default function ApplicationFormInner({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* NAME */}
-            <FormInputField
-              control={form.control}
-              name="name"
-              label="Full Name"
-              placeholder="Your full name"
-            />
-
             {/* EMAIL */}
             <FormInputField
               control={form.control}
               name="email"
               label="Email"
               placeholder="your@email.com"
+              onValueChange={(value) => debouncedCheckEmail(String(value))}
+            />
+
+            {isPending && (
+              <div className="text-xs animate-pulse mt-1">
+                Sedang mengecek email...
+              </div>
+            )}
+            {/* NAME */}
+            <FormInputField
+              control={form.control}
+              name="name"
+              label="Full Name"
+              placeholder="Your full name"
             />
 
             {/* EXPERIENCE */}

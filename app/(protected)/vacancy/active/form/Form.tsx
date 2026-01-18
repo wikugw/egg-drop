@@ -50,7 +50,7 @@ export default function VacancyForm() {
     mutationFn: async (values: VacancyActiveFormType) => {
       const check = await checkVacancyActive(values.vacancyId, today());
 
-      if (check?.id) {
+      if (check.data?.id) {
         throw new Error("Active vacancy already exists");
       }
 

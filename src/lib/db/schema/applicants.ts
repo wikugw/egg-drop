@@ -1,3 +1,4 @@
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   pgTable,
@@ -32,3 +33,10 @@ export const applicants = pgTable(
     emailUnique: uniqueIndex("applicants_email_unique").on(table.email),
   })
 );
+
+// Type untuk membaca data (hasil SELECT)
+export type Applicant = InferSelectModel<typeof applicants>;
+
+// Type untuk memasukkan data (hasil INSERT)
+// Ini berguna karena kolom seperti 'id' atau 'createdAt' opsional saat insert
+export type NewApplicant = InferInsertModel<typeof applicants>;
