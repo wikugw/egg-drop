@@ -1,4 +1,3 @@
-"use client";
 import ApplicationForm from "./ApplicationForm";
 
 export default function ListApplicationPage() {
