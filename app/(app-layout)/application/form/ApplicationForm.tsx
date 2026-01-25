@@ -1,3 +1,5 @@
+"use client";
+
 import VacancyPreview from "@/app/(protected)/vacancy/active/form/Preview";
 import { Card } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
