@@ -38,7 +38,7 @@ export default function ApplicationCard({ item }: ApplicationCardProps) {
         <Link
           href={{
             pathname: "/application/form",
-            query: { id: item.id },
+            query: { vacancyPeriodId: item.id },
           }}
         >
           <Button variant="outline" className="w-full mt-4">
