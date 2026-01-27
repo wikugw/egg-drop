@@ -24,7 +24,7 @@ import { RootState } from "@/src/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "next/dist/server/api-utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -35,6 +35,7 @@ import { useDebouncedCallback } from "use-debounce";
 ======================= */
 type ApplicationFormProps = {
   vacancyPeriodId: string;
+  applicationId: string;
 };
 
 /* =======================
@@ -42,12 +43,10 @@ type ApplicationFormProps = {
 ======================= */
 export default function ApplicationFormInner({
   vacancyPeriodId,
+  applicationId,
 }: ApplicationFormProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const employee = useSelector((state: RootState) => state.employee.data);
-
-  const applicationId = searchParams.get("applicationId") ?? undefined;
 
   /* =======================
      FORM SETUP
@@ -93,7 +92,7 @@ export default function ApplicationFormInner({
     mutationFn: async (values: ApplicationFormType) => {
       return api.post<void, ApplicationFormType>(
         "/api/applications/post",
-        values
+        values,
       );
     },
     onSuccess: () => {
